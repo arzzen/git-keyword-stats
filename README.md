@@ -1,4 +1,4 @@
-[![Gem Version](https://badge.fury.io/rb/git-keyword-stats.svg)](https://badge.fury.io/rb/git-keyword-stats)
+[![Gem Version](https://badge.fury.io/rb/git-keyword-stats.svg)](https://badge.fury.io/rb/git-keyword-stats) [![Gem](https://img.shields.io/gem/dt/git-keyword-stats.svg)](https://github.com/arzzen/git-keyword-stats)
 
 Inspired by [git-swear-stats], [the Linux Kernel Fuck Count] and [its descendent],
 `git-keyword-stats` will give you some interesting statistics on keywording in a
