@@ -33,6 +33,8 @@ git repository's commit messages.
 
 # Example Output
 
+### With default keywords (bugfix,clear,typo,hotfix,debug,bug)
+
     $ git keyword-stats 
     Reading in git log... done!
     Parsing git log.
@@ -47,4 +49,21 @@ git repository's commit messages.
     | Overall        | 2    | 2     | 1   | 15    | 1      |
     +----------------+------+-------+-----+-------+--------+
 
+### With custom keywords file
+
+    $ git keyword-stats --config="path/to/file.yml"
+    
+    # example config file (cat path/to/file.yml)
+    
+    keywords:
+        - 'bugfix'
+        - '^(clear)$'
+        - 'typo'
+        - 'hotfix'
+        - 'readme'
+        - 'debug'
+        - '^(bug)$'
+        - '^(hot|typo|bug)fix$' 
+        
+        
 
