@@ -1,0 +1,165 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+
+# May you recognize your weaknesses and share your strengths.
+# May you share freely, never taking more than you give.
+# May you find love and love everyone you find.
+
+require 'docopt'
+require 'git'
+require 'pp'
+require 'terminal-table'
+require 'yaml'
+
+# Git intercepts `git keyword-stats --help`, so unfortunately most people won't
+# see this usage message.  Docopt is still a great way to do parsing, though.
+doc = <<DOCOPT
+git-keyword-stats
+
+Usage:
+   git-keyword-stats [options] [messages|diffs]
+
+Options:
+   -h, --help               Show this screen.
+   --debug                  Print out debug messages.
+   --include-merges         Look at merge commits.
+   --no-progress            Don't print out progress information.
+   --last-month             Log since 1 month ago
+   --since=<sn>             Log since XY ago
+   --until=<un>             Log until XY ago
+   --config=<file>          Config file path
+
+DOCOPT
+begin
+   options = Docopt::docopt doc
+rescue Docopt::Exit => e
+   puts e.message
+   exit 1
+end
+pp options if options['--debug']
+
+configFile = options['--config'] ? options['--config'] : 'bin/default.yml' 
+config = YAML.load_file(configFile)
+keywords = config['keywords'] 
+
+wordDelimiters = %r{[ \-_.,!?;:*"'|{}()\n]}
+
+wordStats = {}
+wordStats.default = 0
+authorStats = {}
+
+repo = Git.open '.'
+# By default, we only get up to 30 commits in the log.  By digging through the
+# source, I found that passing nil to repo.log() ends up setting the limit to
+# nil, and thus giving us all commits.
+print 'Reading in git log... ' if not options['--no-progress']
+
+log = repo.log nil
+
+if options['--last-month']
+    log.since("1 month ago")     
+end
+    
+if options['--since']
+    log.since(options['--since'])
+end
+
+if options['--until'] 
+    log.until(options['--until'])
+end
+
+puts 'done!' if not options['--no-progress']
+
+print 'Parsing git log' if not options['--no-progress']
+log.each_with_index do |commit, i|
+   # Merges often have data in them from other commits, pull request
+   # descriptions, etc., so it's not really fair to count them.
+   # Git::Log unfortunately appears to have no way of passing --no-merges
+   # through to the underlying binary, so we have to check merges on a
+   # commit-by-commit basis instead.
+   next if not options['--include-merges'] and commit.parents.count > 1
+   
+   author = commit.author.name
+   if not authorStats.key? author
+      authorStats[author] = {}
+      authorStats[author].default = 0
+   end
+   
+   if !options['diffs']
+      # Splitting on words makes our regexes a little simpler.
+      commit.message.split(wordDelimiters).each do |word|
+         word.downcase! # A little bit of normalization.
+         keywords.each do |keyword|
+	     if word =~ /#{keyword}/
+               wordStats[word] += 1
+               authorStats[author][word] += 1
+               if options['--debug']
+                  puts '-'*80
+                  puts author
+                  puts commit.message
+                  puts '-'*80
+               end
+            end
+         end
+      end
+   end
+   
+   if !options['messages']
+      # The git module doesn't handle a diff on the initial commit very well - by
+      # which I mean it throws an exception.
+      # TODO: Monkeypatch the shit out of Git::Commit.
+      next if commit.parents.count == 0
+      
+      diff = commit.diff_parent.to_s.force_encoding 'iso-8859-1'
+      # We only want to look at stuff they did, not surrounding things.  We'll
+      # approximate this by grepping through lines "added".
+      lines = diff.split("\n")
+      # Drop the first four lines to get rid of the diff header.
+      lines.drop(4).keep_if {|line| line =~ /^\+/}.each do |line|
+         line[1..-1].split(wordDelimiters).each do |word|
+            word.downcase! # A little bit of normalization.
+            keywords.each do |keyword|
+               if word =~ /#{keyword}/
+                  wordStats[word] += 1
+                  authorStats[author][word] += 1
+                  if options['--debug']
+                     puts '-'*80
+                     puts author
+                     puts line
+                     puts '-'*80
+                  end
+               end
+            end
+         end
+      end
+   end
+   
+   # For large repos, parsing can take a while; let users know something is
+   # happening.
+   print '.' if i % 100 == 0 and not options['--no-progress']
+end
+puts if not options['--no-progress']
+
+# People who haven't sworn at all aren't very interesting.
+authorStats.delete_if {|author, keywords| keywords.empty?}
+
+pp wordStats if options['--debug']
+pp authorStats if options['--debug']
+
+# Draw table
+puts ''
+subject = 'Author/Keyword'
+table = Terminal::Table.new
+table.headings = header = [subject] + wordStats.keys
+authorStats.each do |author, stats|
+   row = []
+   stats[subject] = author # Cheat a little for the first column.
+   header.each {|keyword| row << stats[keyword]}
+   table.add_row row
+end
+
+wordStats = Hash[0, 'Overall'].merge!(wordStats)
+table.add_separator
+table.add_row wordStats.values
+puts table
+puts ''
