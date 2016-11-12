@@ -29,6 +29,9 @@ git repository's commit messages.
        --since=<sn>         Log since XY ago
        --until=<un>         Log until XY ago
        --config=<file>      Config file path
+    
+    Readme:
+       https://github.com/arzzen/git-keyword-stats
 
 
 # Example Output

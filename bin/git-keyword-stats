@@ -29,6 +29,9 @@ Options:
    --until=<un>             Log until XY ago
    --config=<file>          Config file path
 
+Readme:
+   https://github.com/arzzen/git-keyword-stats
+
 DOCOPT
 begin
    options = Docopt::docopt doc
