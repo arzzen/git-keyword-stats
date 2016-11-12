@@ -1,3 +1,5 @@
+[![Gem Version](https://badge.fury.io/rb/git-keyword-stats.svg)](https://badge.fury.io/rb/git-keyword-stats)
+
 Inspired by [git-swear-stats], [the Linux Kernel Fuck Count] and [its descendent],
 `git-keyword-stats` will give you some interesting statistics on keywording in a
 git repository's commit messages.
