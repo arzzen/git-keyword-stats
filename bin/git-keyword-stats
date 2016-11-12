@@ -38,9 +38,21 @@ rescue Docopt::Exit => e
 end
 pp options if options['--debug']
 
-configFile = options['--config'] ? options['--config'] : 'bin/default.yml' 
-config = YAML.load_file(configFile)
-keywords = config['keywords'] 
+default = [
+   '^bugfix$',
+   '^clear$',
+   '^typo$',
+   '^hotfix$',
+   '^debug$',
+   '^bug$'
+]
+
+if options['--config']
+    config = YAML.load_file(options['--config'])
+    keywords = config['keywords'] 
+else 
+    keywords = default
+end
 
 wordDelimiters = %r{[ \-_.,!?;:*"'|{}()\n]}
 
