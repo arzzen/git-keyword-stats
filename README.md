@@ -18,7 +18,7 @@ gem install git-keyword-stats
 git-keyword-stats --help
 ```
 
-```sh
+```
     Usage:
        git-keyword-stats [options] [messages|diffs]
     
@@ -44,7 +44,7 @@ git-keyword-stats --help
 git keyword-stats 
 ```
 
-```sh
+```
     Reading in git log... done!
     Parsing git log.
     
