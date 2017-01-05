@@ -42,12 +42,8 @@ end
 pp options if options['--debug']
 
 default = [
-   '^bugfix$',
-   '^clear$',
-   '^typo$',
-   '^hotfix$',
-   '^debug$',
-   '^bug$'
+   '^rename$',
+   '^replace$'
 ]
 
 if options['--config']
