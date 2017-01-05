@@ -38,7 +38,7 @@ git-keyword-stats --help
 
 # Example Output
 
-### With default keywords (bugfix,clear,typo,hotfix,debug,bug)
+##### With default keywords
 
 ```sh
 git keyword-stats 
