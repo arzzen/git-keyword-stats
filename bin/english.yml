@@ -1,9 +1,0 @@
-keywords:
-  - 'bugfix'
-  - '^(clear)$'
-  - 'typo'
-  - 'hotfix'
-  - 'readme'
-  - 'debug'
-  - '^(bug)$'
-  - '^(hot|typo|bug)fix$'  
