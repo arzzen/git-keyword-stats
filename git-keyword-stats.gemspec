@@ -3,7 +3,7 @@
 
 Gem::Specification.new do |s|
    s.name = 'git-keyword-stats'
-   s.version = "1.0.3"
+   s.version = "1.0.4"
    s.date = Time.now.strftime('%Y-%m-%d')
 
    s.authors = ['James Pearson', 'Lukas Mestan']
