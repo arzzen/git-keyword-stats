@@ -1,22 +1,24 @@
 [![Gem Version](https://badge.fury.io/rb/git-keyword-stats.svg)](https://rubygems.org/gems/git-keyword-stats) [![Gem](https://img.shields.io/gem/dt/git-keyword-stats.svg)](https://rubygems.org/gems/git-keyword-stats)
 
-Inspired by [git-swear-stats], [the Linux Kernel Fuck Count] and [its descendent],
-`git-keyword-stats` will give you some interesting statistics on keywording in a
-git repository's commit messages.
+How many times are words, names or functions found in the git repository? 
 
-[the Linux Kernel Fuck Count]: http://durak.org/sean/pubs/kfc/
-[its descendent]: http://www.vidarholen.net/contents/wordcount/
-[git-swear-stats]: https://github.com/xiongchiamiov/git-swear-stats
+`Git-keyword-stats` will give you some interesting statistics on keywording in a
+git repository's commit messages. 
+
 
 # Installation
 
-    $ gem install git-keyword-stats
+```sh
+gem install git-keyword-stats
+```
 
 # Usage
 
-    $ git-keyword-stats --help
-    git-keyword-stats
-    
+```sh
+git-keyword-stats --help
+```
+
+```sh
     Usage:
        git-keyword-stats [options] [messages|diffs]
     
@@ -32,41 +34,61 @@ git repository's commit messages.
     
     Readme:
        https://github.com/arzzen/git-keyword-stats
-
+```
 
 # Example Output
 
 ### With default keywords (bugfix,clear,typo,hotfix,debug,bug)
 
-    $ git keyword-stats 
+```sh
+git keyword-stats 
+```
+
+```sh
     Reading in git log... done!
     Parsing git log.
     
-    +----------------+------+-------+-----+-------+--------+
-    | Author/Keyword | typo | clear | bug | debug | readme |
-    +----------------+------+-------+-----+-------+--------+
-    | arzzen         | 2    | 2     | 1   | 2     | 0      |
-    | xiongchiamiov  | 0    | 0     | 0   | 8     | 1      |
-    | James Pearson  | 0    | 0     | 0   | 5     | 0      |
-    +----------------+------+-------+-----+-------+--------+
-    | Overall        | 2    | 2     | 1   | 15    | 1      |
-    +----------------+------+-------+-----+-------+--------+
+    +----------------+--------+---------+
+    | Author/Keyword | rename | replace |
+    +----------------+--------+---------+
+    | arzzen         | 2      | 2       |
+    | xiongchiamiov  | 0      | 1       |
+    | James Pearson  | 0      | 5       |
+    +----------------+--------+---------+
+    | Overall        | 2      | 8       |
+    +----------------+--------+---------+
+```
 
-### With custom keywords file
+### Custom keywords
 
-    $ git keyword-stats --config="path/to/file.yml"
-    
-    # example config file (cat path/to/file.yml)
-    
+##### Example config.yml
+
+```sh
+    # list of keywords
     keywords:
-        - 'bugfix'
-        - '^(clear)$'
-        - 'typo'
-        - 'hotfix'
-        - 'readme'
-        - 'debug'
-        - '^(bug)$'
-        - '^(hot|typo|bug)fix$' 
+        # you can use plain word
+        - 'rename'
+        - 'replace'
+        # you can use regexp
+        - '^(hot|typo|bug)fix$'
+        - '^(love|hate|meh)$'
+        - '^(trash|garbage|rubbish|junk)$'
+        - '^(ture|treu|tuer|flase|fasle|fales)$'
+```   
+
+##### Usage config    
+    
+```sh
+git keyword-stats --config="path/to/config.yml"
+``` 
         
-        
+### TL;DR
+
+Inspired by [git-swear-stats], [the Linux Kernel Fuck Count] and [its descendent],
+
+[the Linux Kernel Fuck Count]: http://durak.org/sean/pubs/kfc/
+[its descendent]: http://www.vidarholen.net/contents/wordcount/
+[git-swear-stats]: https://github.com/xiongchiamiov/git-swear-stats
+
+
 
