@@ -41,7 +41,7 @@ git-keyword-stats --help
 ##### With default keywords
 
 ```sh
-git keyword-stats 
+git-keyword-stats 
 ```
 
 ```
@@ -79,7 +79,7 @@ git keyword-stats
 ##### Usage config    
     
 ```sh
-git keyword-stats --config="path/to/config.yml"
+git-keyword-stats --config="path/to/config.yml"
 ``` 
         
 ### TL;DR
